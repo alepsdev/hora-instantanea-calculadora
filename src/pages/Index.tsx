@@ -6,6 +6,7 @@ import ConfigPanel from "@/components/ConfigPanel";
 import TimeEntryForm from "@/components/TimeEntryForm";
 import TimeEntryList from "@/components/TimeEntryList";
 import Summary from "@/components/Summary";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const Index = () => {
   // Estado para armazenar registros de tempo usando localStorage
@@ -27,9 +28,12 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-6 text-center">Sistema de Registro de Ponto</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-center">Sistema de Registro de Ponto</h1>
+          <ThemeToggle />
+        </div>
         
         <div className="grid md:grid-cols-12 gap-6">
           {/* Coluna da esquerda */}

@@ -27,5 +27,23 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, React.Disp
     }
   }, [key, storedValue]);
 
+  // Garantir que o valor seja atualizado se o localStorage mudar em outra guia/janela
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === key && event.newValue) {
+        try {
+          setStoredValue(JSON.parse(event.newValue));
+        } catch (e) {
+          console.error(`Erro ao processar mudança no localStorage:`, e);
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [key]);
+
   return [storedValue, setStoredValue];
 }
