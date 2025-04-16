@@ -4,6 +4,7 @@ import { AppConfig } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useLocale } from "@/contexts/LocaleContext";
 
 interface ConfigPanelProps {
   config: AppConfig;
@@ -11,6 +12,8 @@ interface ConfigPanelProps {
 }
 
 const ConfigPanel: React.FC<ConfigPanelProps> = ({ config, setConfig }) => {
+  const { currencySymbol, t } = useLocale();
+  
   const handleRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     if (!isNaN(value) && value >= 0) {
@@ -21,11 +24,11 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({ config, setConfig }) => {
   return (
     <Card className="w-full mb-6">
       <CardHeader>
-        <CardTitle>Configurações</CardTitle>
+        <CardTitle>{t("config.title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <Label htmlFor="hourlyRate">Valor da Hora (R$)</Label>
+          <Label htmlFor="hourlyRate">{t("config.hourlyRate")} ({currencySymbol})</Label>
           <Input
             id="hourlyRate"
             type="number"

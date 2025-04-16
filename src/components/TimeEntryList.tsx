@@ -1,13 +1,14 @@
 
 import React from "react";
 import { format, parseISO } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { ptBR, it } from "date-fns/locale";
 import { TimeEntry, AppConfig } from "@/types";
 import { calculateWorkTime, calculateValue, minutesToTime } from "@/utils/timeCalculations";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { useLocale } from "@/contexts/LocaleContext";
 
 interface TimeEntryListProps {
   entries: TimeEntry[];
@@ -16,25 +17,31 @@ interface TimeEntryListProps {
 }
 
 const TimeEntryList: React.FC<TimeEntryListProps> = ({ entries, config, removeEntry }) => {
+  // Obter o contexto de idioma e moeda
+  const { language, currencySymbol, t } = useLocale();
+  
+  // Definir o locale para date-fns baseado no idioma selecionado
+  const dateLocale = language === "it-IT" ? it : ptBR;
+  
   // Ordenação por data (mais recente primeiro)
   const sortedEntries = [...entries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Registros de Horas</CardTitle>
+        <CardTitle>{t("entries.title")}</CardTitle>
       </CardHeader>
       <CardContent>
         {sortedEntries.length > 0 ? (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Data</TableHead>
-                <TableHead>Período</TableHead>
-                <TableHead>Pausa</TableHead>
-                <TableHead>Viagem</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Valor</TableHead>
+                <TableHead>{t("entries.date")}</TableHead>
+                <TableHead>{t("entries.period")}</TableHead>
+                <TableHead>{t("entries.break")}</TableHead>
+                <TableHead>{t("entries.travel")}</TableHead>
+                <TableHead>{t("entries.total")}</TableHead>
+                <TableHead>{t("entries.value")}</TableHead>
                 <TableHead className="w-10"></TableHead>
               </TableRow>
             </TableHeader>
@@ -46,7 +53,7 @@ const TimeEntryList: React.FC<TimeEntryListProps> = ({ entries, config, removeEn
                 return (
                   <TableRow key={entry.id}>
                     <TableCell>
-                      {format(parseISO(entry.date), "dd/MM/yyyy", { locale: ptBR })}
+                      {format(parseISO(entry.date), "dd/MM/yyyy", { locale: dateLocale })}
                     </TableCell>
                     <TableCell>
                       {entry.startTime} - {entry.endTime}
@@ -56,7 +63,7 @@ const TimeEntryList: React.FC<TimeEntryListProps> = ({ entries, config, removeEn
                     </TableCell>
                     <TableCell>{entry.travelTime} min</TableCell>
                     <TableCell>{minutesToTime(workTimeMinutes)}</TableCell>
-                    <TableCell>R$ {entryValue.toFixed(2)}</TableCell>
+                    <TableCell>{currencySymbol} {entryValue.toFixed(2)}</TableCell>
                     <TableCell>
                       <Button 
                         variant="ghost" 
@@ -74,7 +81,7 @@ const TimeEntryList: React.FC<TimeEntryListProps> = ({ entries, config, removeEn
           </Table>
         ) : (
           <p className="text-center py-4 text-muted-foreground">
-            Nenhum registro encontrado. Adicione seu primeiro registro de horas.
+            {t("entries.noEntries")}
           </p>
         )}
       </CardContent>

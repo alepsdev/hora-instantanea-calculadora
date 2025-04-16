@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { ptBR, it } from "date-fns/locale";
 import { TimeEntry } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,12 +12,16 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/contexts/LocaleContext";
 
 interface TimeEntryFormProps {
   addEntry: (entry: TimeEntry) => void;
 }
 
 const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ addEntry }) => {
+  const { language, t } = useLocale();
+  const dateLocale = language === "it-IT" ? it : ptBR;
+  
   const [date, setDate] = useState<Date>(new Date());
   const [startTime, setStartTime] = useState<string>("08:00");
   const [endTime, setEndTime] = useState<string>("17:00");
@@ -50,12 +54,12 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ addEntry }) => {
   return (
     <Card className="w-full mb-6">
       <CardHeader>
-        <CardTitle>Registrar Horas</CardTitle>
+        <CardTitle>{t("form.title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="date">Data</Label>
+            <Label htmlFor="date">{t("form.date")}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -64,7 +68,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ addEntry }) => {
                   className={cn("w-full justify-start text-left font-normal")}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                  {format(date, "dd 'de' MMMM 'de' yyyy", { locale: dateLocale })}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -74,6 +78,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ addEntry }) => {
                   onSelect={(newDate) => newDate && setDate(newDate)}
                   initialFocus
                   className="p-3 pointer-events-auto"
+                  locale={dateLocale}
                 />
               </PopoverContent>
             </Popover>
@@ -81,7 +86,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ addEntry }) => {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="startTime">Hora de Início</Label>
+              <Label htmlFor="startTime">{t("form.startTime")}</Label>
               <Input
                 id="startTime"
                 type="time"
@@ -90,7 +95,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ addEntry }) => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="endTime">Hora de Término</Label>
+              <Label htmlFor="endTime">{t("form.endTime")}</Label>
               <Input
                 id="endTime"
                 type="time"
@@ -102,7 +107,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ addEntry }) => {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="breakStart">Início da Pausa</Label>
+              <Label htmlFor="breakStart">{t("form.breakStart")}</Label>
               <Input
                 id="breakStart"
                 type="time"
@@ -111,7 +116,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ addEntry }) => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="breakEnd">Fim da Pausa</Label>
+              <Label htmlFor="breakEnd">{t("form.breakEnd")}</Label>
               <Input
                 id="breakEnd"
                 type="time"
@@ -122,7 +127,7 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ addEntry }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="travelTime">Tempo de Viagem (minutos)</Label>
+            <Label htmlFor="travelTime">{t("form.travelTime")}</Label>
             <Input
               id="travelTime"
               type="number"
@@ -133,17 +138,17 @@ const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ addEntry }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes">Observações (opcional)</Label>
+            <Label htmlFor="notes">{t("form.notes")}</Label>
             <Input
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Adicionar notas..."
+              placeholder={t("form.notes")}
             />
           </div>
           
           <CardFooter className="px-0">
-            <Button type="submit" className="w-full">Adicionar Registro</Button>
+            <Button type="submit" className="w-full">{t("form.submit")}</Button>
           </CardFooter>
         </form>
       </CardContent>

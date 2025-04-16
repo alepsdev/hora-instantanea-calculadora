@@ -10,6 +10,7 @@ import {
 } from "@/utils/timeCalculations";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLocale } from "@/contexts/LocaleContext";
 
 interface SummaryProps {
   entries: TimeEntry[];
@@ -17,6 +18,8 @@ interface SummaryProps {
 }
 
 const Summary: React.FC<SummaryProps> = ({ entries, config }) => {
+  const { currencySymbol, t } = useLocale();
+  
   // Cálculos para dia atual (hoje)
   const today = new Date().toISOString().split('T')[0];
   const todayEntries = entries.filter(entry => entry.date === today);
@@ -36,61 +39,61 @@ const Summary: React.FC<SummaryProps> = ({ entries, config }) => {
   return (
     <Card className="w-full mb-6">
       <CardHeader>
-        <CardTitle>Resumo</CardTitle>
+        <CardTitle>{t("summary.title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="today" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="today">Hoje</TabsTrigger>
-            <TabsTrigger value="week">Semana</TabsTrigger>
-            <TabsTrigger value="month">Mês</TabsTrigger>
+            <TabsTrigger value="today">{t("summary.today")}</TabsTrigger>
+            <TabsTrigger value="week">{t("summary.week")}</TabsTrigger>
+            <TabsTrigger value="month">{t("summary.month")}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="today" className="space-y-4 pt-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 border rounded-md text-center">
-                <p className="text-sm text-muted-foreground">Total de Horas</p>
+                <p className="text-sm text-muted-foreground">{t("summary.totalHours")}</p>
                 <h3 className="text-2xl font-bold mt-1">{minutesToTime(todayMinutes)}</h3>
               </div>
               <div className="p-4 border rounded-md text-center">
-                <p className="text-sm text-muted-foreground">Valor Total</p>
-                <h3 className="text-2xl font-bold mt-1 text-green-600">R$ {todayValue.toFixed(2)}</h3>
+                <p className="text-sm text-muted-foreground">{t("summary.totalValue")}</p>
+                <h3 className="text-2xl font-bold mt-1 text-green-600">{currencySymbol} {todayValue.toFixed(2)}</h3>
               </div>
             </div>
             <p className="text-sm text-muted-foreground text-center">
-              {todayEntries.length} registros hoje
+              {todayEntries.length} {t("summary.records")} {t("summary.today").toLowerCase()}
             </p>
           </TabsContent>
           
           <TabsContent value="week" className="space-y-4 pt-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 border rounded-md text-center">
-                <p className="text-sm text-muted-foreground">Total de Horas</p>
+                <p className="text-sm text-muted-foreground">{t("summary.totalHours")}</p>
                 <h3 className="text-2xl font-bold mt-1">{minutesToTime(weekMinutes)}</h3>
               </div>
               <div className="p-4 border rounded-md text-center">
-                <p className="text-sm text-muted-foreground">Valor Total</p>
-                <h3 className="text-2xl font-bold mt-1 text-green-600">R$ {weekValue.toFixed(2)}</h3>
+                <p className="text-sm text-muted-foreground">{t("summary.totalValue")}</p>
+                <h3 className="text-2xl font-bold mt-1 text-green-600">{currencySymbol} {weekValue.toFixed(2)}</h3>
               </div>
             </div>
             <p className="text-sm text-muted-foreground text-center">
-              {weekEntries.length} registros esta semana
+              {weekEntries.length} {t("summary.records")} {t("summary.week").toLowerCase()}
             </p>
           </TabsContent>
           
           <TabsContent value="month" className="space-y-4 pt-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 border rounded-md text-center">
-                <p className="text-sm text-muted-foreground">Total de Horas</p>
+                <p className="text-sm text-muted-foreground">{t("summary.totalHours")}</p>
                 <h3 className="text-2xl font-bold mt-1">{minutesToTime(monthMinutes)}</h3>
               </div>
               <div className="p-4 border rounded-md text-center">
-                <p className="text-sm text-muted-foreground">Valor Total</p>
-                <h3 className="text-2xl font-bold mt-1 text-green-600">R$ {monthValue.toFixed(2)}</h3>
+                <p className="text-sm text-muted-foreground">{t("summary.totalValue")}</p>
+                <h3 className="text-2xl font-bold mt-1 text-green-600">{currencySymbol} {monthValue.toFixed(2)}</h3>
               </div>
             </div>
             <p className="text-sm text-muted-foreground text-center">
-              {monthEntries.length} registros este mês
+              {monthEntries.length} {t("summary.records")} {t("summary.month").toLowerCase()}
             </p>
           </TabsContent>
         </Tabs>

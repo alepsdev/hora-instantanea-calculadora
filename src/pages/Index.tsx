@@ -7,14 +7,18 @@ import TimeEntryForm from "@/components/TimeEntryForm";
 import TimeEntryList from "@/components/TimeEntryList";
 import Summary from "@/components/Summary";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { useLocale } from "@/contexts/LocaleContext";
 
 const Index = () => {
+  const { t } = useLocale();
+  
   // Estado para armazenar registros de tempo usando localStorage
   const [timeEntries, setTimeEntries] = useLocalStorage<TimeEntry[]>("timeEntries", []);
   
   // Estado para configuração usando localStorage
   const [config, setConfig] = useLocalStorage<AppConfig>("appConfig", {
-    hourlyRate: 50.00 // Valor padrão inicial de R$50/hora
+    hourlyRate: 50.00 // Valor padrão inicial de €50/hora
   });
 
   // Função para adicionar um novo registro
@@ -31,8 +35,11 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="container mx-auto py-8 px-4">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-center">Sistema de Registro de Ponto</h1>
-          <ThemeToggle />
+          <h1 className="text-3xl font-bold text-center">{t("title")}</h1>
+          <div className="flex space-x-2">
+            <LanguageSelector />
+            <ThemeToggle />
+          </div>
         </div>
         
         <div className="grid md:grid-cols-12 gap-6">
