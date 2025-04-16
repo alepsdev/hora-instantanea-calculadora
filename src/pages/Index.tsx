@@ -2,16 +2,16 @@
 import { useState } from "react";
 import { TimeEntry, AppConfig } from "@/types";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import ConfigPanel from "@/components/ConfigPanel";
 import TimeEntryForm from "@/components/TimeEntryForm";
 import TimeEntryList from "@/components/TimeEntryList";
 import Summary from "@/components/Summary";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { LanguageSelector } from "@/components/LanguageSelector";
 import { useLocale } from "@/contexts/LocaleContext";
+import { useAuth } from "@/contexts/AuthContext";
+import SettingsMenu from "@/components/SettingsMenu";
 
 const Index = () => {
   const { t } = useLocale();
+  const { user } = useAuth();
   
   // Estado para armazenar registros de tempo usando localStorage
   const [timeEntries, setTimeEntries] = useLocalStorage<TimeEntry[]>("timeEntries", []);
@@ -35,19 +35,15 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <div className="container mx-auto py-8 px-4">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-center">{t("title")}</h1>
+          <h1 className="text-3xl font-bold">{t("title")}</h1>
           <div className="flex space-x-2">
-            <LanguageSelector />
-            <ThemeToggle />
+            <SettingsMenu config={config} setConfig={setConfig} />
           </div>
         </div>
         
         <div className="grid md:grid-cols-12 gap-6">
           {/* Coluna da esquerda */}
           <div className="md:col-span-4 space-y-6">
-            {/* Painel de configuração */}
-            <ConfigPanel config={config} setConfig={setConfig} />
-            
             {/* Resumo dos valores */}
             <Summary entries={timeEntries} config={config} />
             
